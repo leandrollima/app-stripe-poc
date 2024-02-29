@@ -1,0 +1,122 @@
+﻿@using App.DTO.ViewModels
+@model CheckoutPackagesViewModel
+
+<section>
+    <form asp-action="index" method="POST" id="checkout-form">
+
+        <input asp-for="PriceId" id="selectedPriceId" />
+        <input asp-for="Currency" />
+
+        <div class="card" id="kt_pricing">
+            <!--begin::Card body-->
+            <div class="card-body p-lg-17">
+                <!--begin::Plans-->
+                <div class="d-flex flex-column">
+                    <!--begin::Heading-->
+                    <div class="mb-13 text-center">
+                        <h1 class="fs-2hx fw-bold mb-5 text-white">Choose Your Package</h1>
+                    </div>
+                    <!--end::Heading-->
+                    @* <div class="nav-group mx-auto my-auto col-lg-6 col-6" data-kt-buttons="true" data-kt-initialized="1">
+                        <div class="m-3">
+                            <label asp-for="PlayerId" class="fs-3"></label>
+                            <select asp-for="PlayerId" class="form-control selectpicker">
+                                <option>Select a character</option>
+                                @if (Model.Players is not null)
+                                {
+                                    foreach (var player in Model.Players)
+                                    {
+                                        <option value="@player.Id">
+                                            @player.Name
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div> *@
+
+
+                    <!--begin::Row-->
+                    <div class="row g-10 mt-6">
+                        @foreach (var product in Model.Products)
+                        {
+                            <!--begin::Col-->
+                            <div class="col-xl-4">
+                                <div class="d-flex h-100 align-items-center">
+                                    <!--begin::Option-->
+                                    <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                        <!--begin::Heading-->
+                                        <div class="mb-7 text-center">
+                                            <!--begin::Title-->
+                                            <h2 class="text-gray-900 mb-5 fw-bolder">@product.ProductName</h2>
+                                            <!--end::Title-->
+                                            <!--begin::Description-->
+                                            <div class="text-gray-600 fw-semibold mb-5">
+                                                @product.Description
+                                            </div>
+                                            <!--end::Description-->
+                                            <!--begin::Price-->
+                                            <div class="text-center">
+                                                @*  <span class="mb-2 text-primary">$</span> *@
+                                                <span class="fs-2x fw-bold text-primary product-price">@product.PriceAmountFormatted</span>
+                                            </div>
+                                            <!--end::Price-->
+                                        </div>
+                                        <!--end::Heading-->
+                                        <!--begin::Features-->
+                                        <div class="w-100 mb-10">
+                                            @if (product.Features?.Count() > 0)
+                                            {
+                                                @foreach (var feature in product.Features)
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(feature))
+                                                    {
+                                                        <!--begin::Item-->
+                                                        <div class="d-flex align-items-center mb-5">
+                                                            <span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">@feature</span>
+                                                            <i class="ki-outline ki-check-circle fs-1 text-success"></i>
+                                                        </div>
+                                                        <!--end::Item-->
+                                                        
+                                                    }
+                                                }
+                                            }
+
+                                        </div>
+                                        <!--end::Features-->
+                                        <!--begin::Select-->
+                                        @* <a asp-action="checkout" asp-route-priceId="@product.PriceId" asp-route-currency="brl" class="btn btn-sm btn-primary">Select</a> *@
+                                        <button id="checkout-button_@product.PriceId" data-price-id="@product.PriceId" class="btn btn-primary select-button">Select</button>
+                                        <!--end::Select-->
+                                    </div>
+                                    <!--end::Option-->
+                                </div>
+                            </div>
+                            <!--end::Col-->
+                        }
+
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Plans-->
+            </div>
+            <!--end::Card body-->
+        </div>
+
+    </form>
+</section>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".select-button").on("click", function (e) {
+                e.preventDefault();
+
+                var priceId = $(this).data("price-id");
+                $("#selectedPriceId").val(priceId);
+
+                $("#checkout-form").submit();
+            });
+        });
+    </script>
+}
